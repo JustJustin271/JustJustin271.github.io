@@ -2,24 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banner Odds Calculator</title>
-    <!-- PyScript for Python in Browser -->
+    
+    <!-- Corrected PyScript Assets for 2026 -->
     <link rel="stylesheet" href="https://pyscript.net">
     <script type="module" src="https://pyscript.net"></script>
 
     <style>
-        body { background-color: black; color: white; font-family: sans-serif; padding: 20px; }
-        input { margin: 10px 0; padding: 5px; width: 100px; }
-        button { padding: 5px 15px; cursor: pointer; background: #444; color: white; border: 1px solid #888; }
-        .result { margin-top: 20px; font-weight: bold; color: #00ff00; }
-        select { padding: 5px; margin-bottom: 10px; }
+        body { 
+            background-color: black; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 40px;
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 { color: #00dbff; }
+        label { display: block; margin-top: 20px; font-weight: bold; }
+        select, input { 
+            margin: 10px 0; 
+            padding: 10px; 
+            width: 100%; 
+            background: #222; 
+            color: white; 
+            border: 1px solid #444;
+            border-radius: 5px;
+        }
+        button { 
+            margin-top: 20px;
+            padding: 12px; 
+            width: 100%;
+            cursor: pointer; 
+            background: #00dbff; 
+            color: black; 
+            border: none; 
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button:hover { background: #00b8d4; }
+        .result-box { 
+            margin-top: 30px; 
+            padding: 20px; 
+            border-left: 5px solid #00dbff; 
+            background: #111;
+            white-space: pre-line;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Banner Probability Calculator</h1>
+    <h1>Banner Odds Calculator</h1>
+    <p>Calculate your chances of success based on rerolls.</p>
 
-    <label>Choose a Banner:</label><br>
+    <label>Choose a Banner:</label>
     <select id="banner_choice">
         <option value="0.008">Colorful Festival (Any Feat.) - 0.8%</option>
         <option value="0.004">Colorful Festival (Specific Feat.) - 0.4%</option>
@@ -34,37 +72,39 @@
         <option value="0.03">Birthday :D - 3.0%</option>
     </select>
 
-    <br>
-    <label>How many rerolls?</label><br>
-    <input type="number" id="repeats" value="10">
+    <label>How many rerolls?</label>
+    <input type="number" id="repeats" value="10" min="1">
     
-    <br>
-    <button id="calc_btn" py-click="calculate_odds">Calculate Odds</button>
+    <button id="calc_btn" py-click="calculate_odds">Calculate My Odds</button>
 
-    <div id="output" class="result"></div>
+    <div id="output" class="result-box">Results will appear here...</div>
 
     <script type="py">
         from pyscript import document
 
         def calculate_odds(event):
-            # Get values from HTML
-            prob = float(document.querySelector("#banner_choice").value)
+            # 1. Grab inputs from the screen
+            prob_selection = document.querySelector("#banner_choice").value
+            repeat_input = document.querySelector("#repeats").value
+            
             try:
-                repeats = int(document.querySelector("#repeats").value)
-            except:
-                document.querySelector("#output").innerText = "Error: Enter a whole number!"
+                prob = float(prob_selection)
+                repeats = int(repeat_input)
+            except ValueError:
+                document.querySelector("#output").innerText = "Error: Please enter a valid number of rerolls."
                 return
 
             if repeats <= 0:
-                document.querySelector("#output").innerText = "Please enter a number greater than 0."
+                document.querySelector("#output").innerText = "Error: Rerolls must be at least 1."
                 return
 
-            # Your Logic
+            # 2. Your original logic
+            # Chance of success = 1 - (chance of failure ^ repeats)
             odds = (1 - ((1 - prob)**repeats)) * 100
             failure = 100 - odds
 
-            # Output to screen
-            result_text = f"The chance of success is: {round(odds, 2)}% \n"
+            # 3. Display the results
+            result_text = f"The chance of success is: {round(odds, 2)}%\n"
             result_text += f"The odds of failure are: {round(failure, 2)}%"
             
             document.querySelector("#output").innerText = result_text
