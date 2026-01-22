@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banner Odds Calculator</title>
+    <title>Project Sekai Calculator</title>
     
-    <!-- Corrected PyScript Assets for 2026 -->
-    <link rel="stylesheet" href="https://pyscript.net">
-    <script type="module" src="https://pyscript.net"></script>
-
     <style>
         body { 
             background-color: black; 
@@ -18,7 +14,7 @@
             max-width: 600px;
             margin: auto;
         }
-        h1 { color: #00dbff; }
+        h1 { color: #0eeadf; } /* Your custom hex code */
         label { display: block; margin-top: 20px; font-weight: bold; }
         select, input { 
             margin: 10px 0; 
@@ -34,18 +30,18 @@
             padding: 12px; 
             width: 100%;
             cursor: pointer; 
-            background: #00dbff; 
+            background: #0eeadf; /* Your custom hex code */
             color: black; 
             border: none; 
             font-weight: bold;
             border-radius: 5px;
             font-size: 1rem;
         }
-        button:hover { background: #00b8d4; }
+        button:hover { background: #0cc9c0; }
         .result-box { 
             margin-top: 30px; 
             padding: 20px; 
-            border-left: 5px solid #00dbff; 
+            border-left: 5px solid #0eeadf; /* Your custom hex code */
             background: #111;
             white-space: pre-line;
             font-size: 1.2rem;
@@ -54,10 +50,10 @@
 </head>
 <body>
 
-    <h1>Project Sekai Calulator :)</h1>
+    <h1>Project Sekai Calculator :)</h1>
     <p>Welcome to my Project Sekai Calculator :D</p>
 
-    <label>Pick a banner, any banner: :</label>
+    <label>Pick a banner, any banner:</label>
     <select id="banner_choice">
         <option value="0.008">Colorful Festival (Any Feat.) - 0.8%</option>
         <option value="0.004">Colorful Festival (Specific Feat.) - 0.4%</option>
@@ -75,39 +71,30 @@
     <label>Number of pulls?</label>
     <input type="number" id="repeats" value="10" min="1">
     
-    <button id="calc_btn" py-click="calculate_odds">Calculate My Odds</button>
+    <button onclick="calculate_odds()">Calculate My Odds</button>
 
     <div id="output" class="result-box">Results will appear here...</div>
 
-    <script type="py">
-        from pyscript import document
-
-        def calculate_odds(event):
-            # 1. Grab inputs from the screen
-            prob_selection = document.querySelector("#banner_choice").value
-            repeat_input = document.querySelector("#repeats").value
+    <script>
+        function calculate_odds() {
+            // 1. Grab inputs from the screen
+            const prob = parseFloat(document.getElementById("banner_choice").value);
+            const repeats = parseInt(document.getElementById("repeats").value);
             
-            try:
-                prob = float(prob_selection)
-                repeats = int(repeat_input)
-            except ValueError:
-                document.querySelector("#output").innerText = "Error: Please enter a valid number of rerolls."
-                return
+            const outputDiv = document.getElementById("output");
 
-            if repeats <= 0:
-                document.querySelector("#output").innerText = "Error: Rerolls must be at least 1."
-                return
+            if (isNaN(repeats) || repeats <= 0) {
+                outputDiv.innerText = "Error: Please enter a valid number of pulls.";
+                return;
+            }
 
-            # 2. Your original logic
-            # Chance of success = 1 - (chance of failure ^ repeats)
-            odds = (1 - ((1 - prob)**repeats)) * 100
-            failure = 100 - odds
+            // 2. Logic: Success = 1 - (Failure chance ^ pulls)
+            const odds = (1 - Math.pow(1 - prob, repeats)) * 100;
+            const failure = 100 - odds;
 
-            # 3. Display the results
-            result_text = f"The chance of success is: {round(odds, 2)}%\n"
-            result_text += f"The odds of failure are: {round(failure, 2)}%"
-            
-            document.querySelector("#output").innerText = result_text
+            // 3. Display the results immediately
+            outputDiv.innerText = `The chance of success is: ${odds.toFixed(2)}%\nThe odds of failure are: ${failure.toFixed(2)}%`;
+        }
     </script>
 
 </body>
