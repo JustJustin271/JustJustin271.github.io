@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Sekai Calculator</title>
     
+    <!-- FAVICON LINK -->
+    <link rel="icon" type="image/png" href="calculator.png">
+
+    <!-- GOOGLE FONTS (Belgrano) -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+
     <style>
         body { 
             background-color: black; 
@@ -14,8 +20,9 @@
             max-width: 600px;
             margin: auto;
         }
-        h1 { color: #0eeadf; } /* Your custom hex code */
+        h1 { color: #0eeadf; }
         label { display: block; margin-top: 20px; font-weight: bold; }
+        
         select, input { 
             margin: 10px 0; 
             padding: 10px; 
@@ -25,26 +32,43 @@
             border: 1px solid #444;
             border-radius: 5px;
         }
+
         button { 
             margin-top: 20px;
             padding: 12px; 
             width: 100%;
             cursor: pointer; 
-            background: #0eeadf; /* Your custom hex code */
+            background: #0eeadf; 
             color: black; 
             border: none; 
             font-weight: bold;
             border-radius: 5px;
             font-size: 1rem;
         }
-        button:hover { background: #0cc9c0; }
+
+        /* THE RAINBOW RESULT BOX */
         .result-box { 
             margin-top: 30px; 
             padding: 20px; 
-            border-left: 5px solid #0eeadf; /* Your custom hex code */
+            border-left: 5px solid #0eeadf; 
             background: #111;
             white-space: pre-line;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            
+            /* Font Settings */
+            font-family: 'Belgrano', serif;
+            
+            /* Rainbow Animation Settings */
+            background: linear-gradient(to right, #ffb7b2, #ffdac1, #e2f0cb, #b5ead7, #c7ceea, #ff9aa2, #ffb7b2);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowShift 4s linear infinite;
+        }
+
+        /* Rainbow Animation Keyframes */
+        @keyframes rainbowShift {
+            to { background-position: 200% center; }
         }
     </style>
 </head>
@@ -77,10 +101,8 @@
 
     <script>
         function calculate_odds() {
-            // 1. Grab inputs from the screen
             const prob = parseFloat(document.getElementById("banner_choice").value);
             const repeats = parseInt(document.getElementById("repeats").value);
-            
             const outputDiv = document.getElementById("output");
 
             if (isNaN(repeats) || repeats <= 0) {
@@ -88,11 +110,9 @@
                 return;
             }
 
-            // 2. Logic: Success = 1 - (Failure chance ^ pulls)
             const odds = (1 - Math.pow(1 - prob, repeats)) * 100;
             const failure = 100 - odds;
 
-            // 3. Display the results immediately
             outputDiv.innerText = `The chance of success is: ${odds.toFixed(2)}%\nThe odds of failure are: ${failure.toFixed(2)}%`;
         }
     </script>
